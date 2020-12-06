@@ -31,21 +31,38 @@ class IssueTest:
         observed_issue_json = self.jira_implementation.issue.set_story_points(story_points, issue_id)
         return observed_issue_json
 
+    class SprintTest:
+        def __init__(self):
+            self.jira_implementation = JiraImplementation()
 
-issue_test = IssueTest()
-issue_key = issue_test.create_issue()
-updated_issue = None
+        def create_sprint(self, sprint_json=None):
+            raise NotImplementedError()
 
-story_point_values = [5, 1, 0, 'A', -1, 3.1415926535, 10000, 10, 30]
-story_point_results = []
-story_point_matches = []
-for story_point_value in story_point_values:
-    story_point_results.append(issue_test.update_story_points(story_point_value, issue_key))
-    updated_issue = issue_test.jira_implementation.issue.get_issue(issue_key)
-    observed_story_points = json.loads(updated_issue.content.decode('utf-8'))['fields']['customfield_10026']
-    story_point_matches.append([story_point_value, observed_story_points])
 
-with open(r'story_point_matches.yaml', 'w') as file:
-    yaml.dump(story_point_matches, file, explicit_start=True)
-    file.close()
+def issue_test_case():
+    issue_test = IssueTest()
+    issue_key = issue_test.create_issue()
+    updated_issue = None
+
+    story_point_values = [5, 1, 0, 'A', -1, 3.1415926535, 10000, 10, 30]
+    story_point_results = []
+    story_point_matches = []
+    for story_point_value in story_point_values:
+        story_point_results.append(issue_test.update_story_points(story_point_value, issue_key))
+        updated_issue = issue_test.jira_implementation.issue.get_issue(issue_key)
+        observed_story_points = json.loads(updated_issue.content.decode('utf-8'))['fields']['customfield_10026']
+        story_point_matches.append([story_point_value, observed_story_points])
+
+    with open(r'story_point_matches.yaml', 'w') as file:
+        yaml.dump(story_point_matches, file, explicit_start=True)
+        file.close()
+
+
+def sprint_test_case():
+    # Add A Sprint
+    # Change Sprint End Date
+    # Close A Sprint
+    # Open Another Sprint
+    raise NotImplementedError()
+
 
