@@ -38,6 +38,12 @@ class IssueTest:
         def create_sprint(self, sprint_json=None):
             raise NotImplementedError()
 
+        def update_sprint_start(self, start_time_date):
+            raise NotImplementedError()
+
+        def update_sprint_end(self, end_time_date):
+            raise NotImplementedError()
+
 
 def issue_test_case():
     issue_test = IssueTest()
@@ -61,8 +67,11 @@ def issue_test_case():
 def sprint_test_case():
     # Add A Sprint
     # Change Sprint End Date
+    # Change Sprint Start Date
     # Close A Sprint
     # Open Another Sprint
+    # Attempt to have overlapping sprints
+    # Put sprints in a workable state
     raise NotImplementedError()
 
 
