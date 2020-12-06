@@ -1,0 +1,8 @@
+fields :
+  project:
+    key: AD
+  customfield_10026 : 5
+  summary: "Updated 12-01 1318 Story about REST ye merry gentlemen"
+  description: "Creating a story issue using project keys and issue type names with REST API"
+  issuetype:
+    name: Story

@@ -1,0 +1,7 @@
+jira_url: https://api-automation-examples.atlassian.net/
+user_id: apiautomationexamples@gmail.com
+token: <Your Token String Goes Here>
+headers:
+    Cache-Control: "no-cache"
+    Content-Type: "application/json"  # ;charset=UTF-8'
+    X-Atlassian-Token: "no-check"
