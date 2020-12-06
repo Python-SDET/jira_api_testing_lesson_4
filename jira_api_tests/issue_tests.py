@@ -31,18 +31,19 @@ class IssueTest:
         observed_issue_json = self.jira_implementation.issue.set_story_points(story_points, issue_id)
         return observed_issue_json
 
-    class SprintTest:
-        def __init__(self):
-            self.jira_implementation = JiraImplementation()
 
-        def create_sprint(self, sprint_json=None):
-            raise NotImplementedError()
+class SprintTest:
+    def __init__(self):
+        self.jira_implementation = JiraImplementation()
 
-        def update_sprint_start(self, start_time_date):
-            raise NotImplementedError()
+    def create_sprint(self, sprint_json=None):
+        raise NotImplementedError()
 
-        def update_sprint_end(self, end_time_date):
-            raise NotImplementedError()
+    def update_sprint_start(self, start_time_date):
+        raise NotImplementedError()
+
+    def update_sprint_end(self, end_time_date):
+        raise NotImplementedError()
 
 
 def issue_test_case():
