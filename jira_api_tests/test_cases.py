@@ -37,16 +37,37 @@ class SprintTest:
         self.jira_implementation = JiraImplementation()
 
     def create_sprint(self, sprint_json=None):
-        return self.jira_implementation.sprint.create_sprint()
+        return self.jira_implementation.sprint.create_sprint(sprint_json)
 
     def update_sprint_name(self, sprint_id, sprint_name):
+        starting_name = None
+        sprint_json = json.loads(self.jira_implementation.sprint.get_sprint(sprint_id).content.decode('utf-8'))
+        if 'name' in sprint_json:
+            starting_name = sprint_json['name']
+
+        if starting_name == sprint_name:
+            return sprint_id
+
         return self.jira_implementation.sprint.set_name(sprint_id, sprint_name)
 
-    def update_sprint_start(self, start_time_date):
-        raise NotImplementedError()
+    def update_sprint_start(self, sprint_id, start_time_date):
+        beginning_start_date = None
+        sprint_json = json.loads(self.jira_implementation.sprint.get_sprint(sprint_id).content.decode('utf-8'))
+        if 'startDate' in sprint_json:
+            beginning_start_date = sprint_json['startDate']
 
-    def update_sprint_end(self, end_time_date):
-        raise NotImplementedError()
+        if beginning_start_date == start_time_date:
+            return sprint_id
+        return self.jira_implementation.sprint.set_start_date(sprint_id, start_time_date)
+
+    def update_sprint_end(self, sprint_id, end_time_date):
+        return self.jira_implementation.sprint.set_end_date(sprint_id, end_time_date)
+
+    def update_sprint_goal(self, sprint_id, goal):
+        return self.jira_implementation.sprint.set_goal(sprint_id, goal)
+
+    def update_sprint_state(self, sprint_id, sprint_state):
+        return self.jira_implementation.sprint.set_state(sprint_id, sprint_state)
 
 
 def issue_test_case():
@@ -71,17 +92,25 @@ def issue_test_case():
 def sprint_test_case():
     sprint_test = SprintTest()
     # Add A Sprint
-    # sprint_key = sprint_test.create_sprint()
+    sprint_create_response = sprint_test.create_sprint()
+    sprint_id = str(json.loads(sprint_create_response.content.decode('utf-8'))['id'])
     # Change Sprint Name
-    name_result = sprint_test.update_sprint_name('1', 'Sprint 12-6-19-14')
-    print(name_result)
-    # Change Sprint End Date
+    name_result = sprint_test.update_sprint_name(sprint_id, 'New TEST Sprint via API')
     # Change Sprint Start Date
+    start_date_result = sprint_test.update_sprint_start(sprint_id, '2020-01-01T00:00:00.000+0000')
+    # Set Sprint End Date Before Start Date
+    end_date_result = sprint_test.update_sprint_end(sprint_id, '2019-01-15T00:00:00.000+0000')
+    assert end_date_result.status_code > 399
+    # Set Sprint End Date After Start Date
+    end_date_result = sprint_test.update_sprint_end(sprint_id, '2020-01-15T00:00:00.000+0000')
+    assert end_date_result.status_code == 200
     # Set Sprint Active
+    active_result = sprint_test.update_sprint_state(sprint_id, 'active')
     # Close A Sprint
-    # Open Another Sprint
-    # Attempt to have overlapping sprints
-    # Put sprints in a workable state
+    closed_result = sprint_test.update_sprint_state(sprint_id, 'closed')
+    # Attempt to reopen a closed sprint
+    reopen_result = sprint_test.update_sprint_state(sprint_id, 'active')
+    assert reopen_result.status_code > 399
 
 
 sprint_test_case()

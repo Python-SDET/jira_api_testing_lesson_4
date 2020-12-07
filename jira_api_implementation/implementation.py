@@ -70,7 +70,7 @@ class JiraImplementation:
             self.implementation = implementation
 
         def get_sprint(self, sprint_id=None):
-            return self.implementation.jira_api.get_entity(self.sprint_url + r'board/1/sprint', sprint_id)
+            return self.implementation.jira_api.get_entity(self.sprint_url + r'/sprint/', sprint_id)
 
         def create_sprint(self, sprint_json=None):
             if not sprint_json:
@@ -79,5 +79,25 @@ class JiraImplementation:
 
         def set_name(self, sprint_id, sprint_name):
             sprint_json = {'name': sprint_name}
+            return self.implementation.jira_api.partial_sprint_update(
+                self.sprint_url + r'sprint/', sprint_json, sprint_id)
+
+        def set_start_date(self, sprint_id, start_date):
+            sprint_json = {'startDate': start_date}
+            return self.implementation.jira_api.partial_sprint_update(
+                self.sprint_url + r'sprint/', sprint_json, sprint_id)
+
+        def set_end_date(self, sprint_id, end_date):
+            sprint_json = {'endDate': end_date}
+            return self.implementation.jira_api.partial_sprint_update(
+                self.sprint_url + r'sprint/', sprint_json, sprint_id)
+
+        def set_goal(self, sprint_id, sprint_goal):
+            sprint_json = {'goal': sprint_goal}
+            return self.implementation.jira_api.partial_sprint_update(
+                self.sprint_url + r'sprint/', sprint_json, sprint_id)
+
+        def set_state(self, sprint_id, sprint_state):
+            sprint_json = {'state': sprint_state}
             return self.implementation.jira_api.partial_sprint_update(
                 self.sprint_url + r'sprint/', sprint_json, sprint_id)
