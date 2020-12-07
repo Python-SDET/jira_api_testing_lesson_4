@@ -93,11 +93,14 @@ def sprint_test_case():
     sprint_test = SprintTest()
     # Add A Sprint
     sprint_create_response = sprint_test.create_sprint()
+    assert sprint_create_response.status_code == 201
     sprint_id = str(json.loads(sprint_create_response.content.decode('utf-8'))['id'])
     # Change Sprint Name
     name_result = sprint_test.update_sprint_name(sprint_id, 'New TEST Sprint via API')
+    assert name_result.status_code == 200
     # Change Sprint Start Date
     start_date_result = sprint_test.update_sprint_start(sprint_id, '2020-01-01T00:00:00.000+0000')
+    assert start_date_result.status_code == 200
     # Set Sprint End Date Before Start Date
     end_date_result = sprint_test.update_sprint_end(sprint_id, '2019-01-15T00:00:00.000+0000')
     assert end_date_result.status_code > 399
@@ -106,8 +109,10 @@ def sprint_test_case():
     assert end_date_result.status_code == 200
     # Set Sprint Active
     active_result = sprint_test.update_sprint_state(sprint_id, 'active')
+    assert active_result.status_code == 200
     # Close A Sprint
     closed_result = sprint_test.update_sprint_state(sprint_id, 'closed')
+    assert closed_result.status_code == 200
     # Attempt to reopen a closed sprint
     reopen_result = sprint_test.update_sprint_state(sprint_id, 'active')
     assert reopen_result.status_code > 399
