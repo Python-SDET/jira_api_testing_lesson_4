@@ -75,4 +75,6 @@ def sprint_test_case():
     # Put sprints in a workable state
     raise NotImplementedError()
 
+issue_test_case()
+
 

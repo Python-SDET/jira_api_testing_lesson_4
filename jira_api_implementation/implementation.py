@@ -1,13 +1,16 @@
 import yaml
+import json
 from jira_api_wrapper.jira_api import JiraApi
-from jira_api_implementation import default_issue_path
+from jira_api_implementation import default_entity_path
 
 
 class JiraImplementation:
     def __init__(self, entity_json=None):
         # Set default issue json
-        issue_input_stream = open(default_issue_path, 'r')
-        self.default_issue_json = yaml.load(issue_input_stream, Loader=yaml.SafeLoader)
+        entity_input_stream = open(default_entity_path, 'r')
+        default_entity_json = yaml.load(entity_input_stream, Loader=yaml.SafeLoader)
+        self.default_issue_json = default_entity_json['issue']
+        self.default_sprint_json = default_entity_json['sprint']
         if entity_json:
             if 'issue' in entity_json:
                 self.default_issue_json = entity_json['issue']
@@ -43,38 +46,43 @@ class JiraImplementation:
 
         def set_story_points(self, point_value, issue_id=None):
             issue_json = self.implementation.default_issue_json
-            issue_json['fields']['customfield_10026'] = point_value
+            del issue_json['fields']
+            issue_json['fields'] = {'customfield_10026': point_value}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
         def update_summary(self, revised_summary, issue_id=None):
             issue_json = self.implementation.default_issue_json
-            issue_json['fields']['summary'] = revised_summary
+            del issue_json['fields']
+            issue_json['fields'] = {'summary': revised_summary}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
         def update_description(self, revised_description, issue_id=None):
             issue_json = self.implementation.default_issue_json
-            issue_json['fields']['description'] = revised_description
+            del issue_json['fields']
+            issue_json['fields'] = {'description': revised_description}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
         def update_labels(self, label_list, issue_id=None):
             issue_json = self.implementation.default_issue_json
-            issue_json['fields']['labels'] = label_list
+            del issue_json['fields']
+            issue_json['fields'] = {'labels': label_list}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
     class Sprint:
         def __init__(self, implementation):
+            # A board number of 1 is used for the initial proof of concept
+            # If additional boards are used, new code to handle that will be needed
             self.sprint_url = r'/rest/agile/1.0/board/1/sprint'
             self.implementation = implementation
 
         def get_sprint(self, sprint_id=None):
             return self.implementation.jira_api.get_entity(self.sprint_url, sprint_id)
 
-'''
-jira_implementation = JiraImplementation()
-sprints = jira_implementation.sprint.get_sprint()
-projects = jira_implementation.project.get_project('AD')
-jira_implementation.issue.set_story_points(1, 'AD-6')
-jira_implementation.issue.update_labels(['LABEL1C', 'LABEL2C', 'LABEL3C'], 'AD-6')
-updated_issue = jira_implementation.issue.get_issue('AD-6')
-print(updated_issue)
-'''
+        def create_sprint(self, sprint_json=None):
+            if not sprint_json:
+                sprint_json = self.implementation.default_sprint_json
+            return self.implementation.jira_api.create_update_entity(self.sprint_url, sprint_json)
+
+        def set_name(self, sprint_id, sprint_name):
+            sprint_json = {'name': sprint_name}
+            return self.implementation.jira_api.create_update_entity(self.sprint_url, sprint_json, sprint_id)

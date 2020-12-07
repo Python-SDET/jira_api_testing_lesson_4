@@ -1,4 +1,4 @@
-- entity: issue
+issue:
   fields :
     project:
       key: AD
@@ -7,7 +7,7 @@
     description: "Creating a story issue using project keys and issue type names with REST API"
     issuetype:
       name: Story
-- entity: sprint
+sprint:
   name: Default Name
   startDate: "2020-01-01T00:00:00.000+00:00"
   endDate: "2020-01-15T00:00:00.000+00:00"
