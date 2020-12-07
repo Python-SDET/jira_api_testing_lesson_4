@@ -45,21 +45,15 @@ class JiraImplementation:
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json)
 
         def set_story_points(self, point_value, issue_id=None):
-            issue_json = self.implementation.default_issue_json
-            del issue_json['fields']
-            issue_json['fields'] = {'customfield_10026': point_value}
+            issue_json = {'fields': {'customfield_10026': point_value}}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
         def update_summary(self, revised_summary, issue_id=None):
-            issue_json = self.implementation.default_issue_json
-            del issue_json['fields']
-            issue_json['fields'] = {'summary': revised_summary}
+            issue_json = {'fields': {'summary': revised_summary}}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
         def update_description(self, revised_description, issue_id=None):
-            issue_json = self.implementation.default_issue_json
-            del issue_json['fields']
-            issue_json['fields'] = {'description': revised_description}
+            issue_json = {'fields': {'description': revised_description}}
             return self.implementation.jira_api.create_update_entity(self.issue_url, issue_json, issue_id)
 
         def update_labels(self, label_list, issue_id=None):
@@ -72,17 +66,18 @@ class JiraImplementation:
         def __init__(self, implementation):
             # A board number of 1 is used for the initial proof of concept
             # If additional boards are used, new code to handle that will be needed
-            self.sprint_url = r'/rest/agile/1.0/board/1/sprint'
+            self.sprint_url = r'/rest/agile/1.0/'
             self.implementation = implementation
 
         def get_sprint(self, sprint_id=None):
-            return self.implementation.jira_api.get_entity(self.sprint_url, sprint_id)
+            return self.implementation.jira_api.get_entity(self.sprint_url + r'board/1/sprint', sprint_id)
 
         def create_sprint(self, sprint_json=None):
             if not sprint_json:
                 sprint_json = self.implementation.default_sprint_json
-            return self.implementation.jira_api.create_update_entity(self.sprint_url, sprint_json)
+            return self.implementation.jira_api.create_update_entity(self.sprint_url + r'sprint/', sprint_json)
 
         def set_name(self, sprint_id, sprint_name):
             sprint_json = {'name': sprint_name}
-            return self.implementation.jira_api.create_update_entity(self.sprint_url, sprint_json, sprint_id)
+            return self.implementation.jira_api.partial_sprint_update(
+                self.sprint_url + r'sprint/', sprint_json, sprint_id)

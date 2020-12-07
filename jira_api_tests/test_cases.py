@@ -37,7 +37,10 @@ class SprintTest:
         self.jira_implementation = JiraImplementation()
 
     def create_sprint(self, sprint_json=None):
-        raise NotImplementedError()
+        return self.jira_implementation.sprint.create_sprint()
+
+    def update_sprint_name(self, sprint_id, sprint_name):
+        return self.jira_implementation.sprint.set_name(sprint_id, sprint_name)
 
     def update_sprint_start(self, start_time_date):
         raise NotImplementedError()
@@ -66,15 +69,21 @@ def issue_test_case():
 
 
 def sprint_test_case():
+    sprint_test = SprintTest()
     # Add A Sprint
+    # sprint_key = sprint_test.create_sprint()
+    # Change Sprint Name
+    name_result = sprint_test.update_sprint_name('1', 'Sprint 12-6-19-14')
+    print(name_result)
     # Change Sprint End Date
     # Change Sprint Start Date
+    # Set Sprint Active
     # Close A Sprint
     # Open Another Sprint
     # Attempt to have overlapping sprints
     # Put sprints in a workable state
-    raise NotImplementedError()
 
-issue_test_case()
+
+sprint_test_case()
 
 

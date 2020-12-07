@@ -30,10 +30,14 @@ class JiraApi:
 
     def create_update_entity(self, entity_url, entity_json, entity_id=None):
         if not entity_id:
-            issue_response = self.session.post(self.url + entity_url, headers=self.headers, json=entity_json)
+            response = self.session.post(self.url + entity_url, headers=self.headers, json=entity_json)
         else:
-            issue_response = self.session.put(self.url + entity_url + entity_id, headers=self.headers, json=entity_json)
-        return issue_response
+            response = self.session.put(self.url + entity_url + entity_id, headers=self.headers, json=entity_json)
+        return response
+
+    def partial_sprint_update(self, entity_url, entity_json, entity_id=None):
+        response = self.session.post(self.url + entity_url + entity_id, headers=self.headers, json=entity_json)
+        return response
 
     def query(self, query_string):
         search_url = r'rest/api/2/search/?jql='
