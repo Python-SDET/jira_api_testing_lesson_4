@@ -1,5 +1,7 @@
 "# jira_api_testing_lesson_4" 
 
+This is a tutorial repository associated with the following YouTube video: https://www.youtube.com/watch?v=eWR49de-RrA
+
 Going thorough all the commits in the repository will help reveal the steps
 
 1) Renamed test file to test_cases.py  
